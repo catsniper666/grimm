@@ -163,6 +163,9 @@ bot.on("message", function(message) {
         case "invite":
             message.channel.sendMessage("https://discordapp.com/api/oauth2/authorize?client_id=384688108442222593&scope=bot&permissions=1")
             break;
+        case "invite fisher":
+            message.channel.sendMessage("https://discordapp.com/api/oauth2/authorize?client_id=395292815309012992&scope=bot&permissions=1")
+            break;
         default:
             message.channel.sendMessage("CatSniper didn't create this command atm... Make sure to add it in #suggestions so our sexy boi can see!");
     }
