@@ -160,6 +160,9 @@ bot.on("message", function(message) {
             guest.addRole("name", `${trole}`)
             message.reply(`Succesfully added role ${trole} to user ${guest.user.username}`)
             break;
+        case "invite":
+            message.channel.sendMessage("https://discordapp.com/api/oauth2/authorize?client_id=384688108442222593&scope=bot&permissions=1")
+            break;
         default:
             message.channel.sendMessage("CatSniper didn't create this command atm... Make sure to add it in #suggestions so our sexy boi can see!");
     }
