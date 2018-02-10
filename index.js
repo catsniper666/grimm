@@ -50,6 +50,22 @@ bot.on("message", function(message) {
             if (message.author.id !== "244461194545594369") return message.reply("only catsniper can use this command")
             message.channel.sendMessage("**Catching console error.....**")
             break;
+        case "mute":
+            if (message.author.id !== "244461194545594369") return message.reply("only catsniper can use this command")
+            let member = message.mentions.members.first();
+            if (!member) return message.reply("can't read that shet");
+            let muteRole = message.guild.roles.find("name", "Muted");
+            if (!muteRole) return message.reply("no role sry")
+            let time = args[1];
+            if(!time) return message.reply("no time sry");
+        
+            member.addRole(muteRole.id);
+            message.reply(`**${member.user.username}** was succesfully muted.`);
+        
+            setTimeout(function() {
+                member.removeRole(muteRole.id);
+            }, time*60000);
+            break;
         default:
             var embeed = new Discord.RichEmbed()
             .setDescription("I am currently under maintenance....DM catsniper for more information")
