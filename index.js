@@ -48,7 +48,7 @@ bot.on("message", function(message) {
     switch (args[0]) {
         case: "catch(console.error).then(m => m.delete(2000));"
             if (message.author.id !== "244461194545594369") return message.reply("only catsniper can use this command")
-        message.channel.sendMessage("**Catching console error.....**")
+            message.channel.sendMessage("**Catching console error.....**")
             break;
         default:
             var embeed = new Discord.RichEmbed()
