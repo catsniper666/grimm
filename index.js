@@ -326,7 +326,7 @@ bot.on("message", async function(message) {
       return message.guild.channels.get(modlog.id).sendEmbed(kembed)
            break;
         default:
-            message.channel.sendMessage("CatSniper didn't create this command atm... Make sure to add it in #suggestions so our sexy boi can see!");
+            return
     }
     
 
