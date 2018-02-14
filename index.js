@@ -326,7 +326,7 @@ bot.on("message", async function(message) {
       return message.guild.channels.get(modlog.id).sendEmbed(kembed)
            break;
         default:
-            return
+
     }
     
 
