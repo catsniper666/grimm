@@ -1,1 +1,5 @@
-
+  `warns` (
+	`userusername`	TEXT,
+	`reason`	TEXT,
+	`messageauthorusername`	TEXT
+);
