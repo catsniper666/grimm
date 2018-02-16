@@ -53,7 +53,7 @@ bot.on("message", async function(message) {
             message.channel.sendMessage("**I'm a super clever bot made by my lord CatSniper**");
             break;
         case "mute":
-            let member = message.mentions.members.first();
+            let member = message.mentions.users.first();
             if (!member) return message.reply("can't read that shet");
             let muteRole = message.guild.roles.find("name", "Muted");
             if (!muteRole) return message.reply("no role sry")
@@ -67,8 +67,9 @@ bot.on("message", async function(message) {
                 member.removeRole(muteRole.id);
             }, time*60000);
             var mutebed = new Discord.RichEmbed()
-            .setColor(0x00AE86)
-            .setTitle("**MUTE**")
+            .setColor(0xD6A405)
+            .setTitle("**Action**", "Mute")
+            .setThumbnail(member.avatarURL)
             .addField("**Muted member:**", `${member.user.username}`)
             .addField("**Muted for:**", `${time} minutes.`)
             message.guild.channels.get(modlog.id).sendEmbed(mutebed)
@@ -80,7 +81,7 @@ bot.on("message", async function(message) {
             mutedone.removeRole(Muted.id);
             message.reply(`**${mutedone.user.username}** was succesfully unmuted.`);
             break;
-        case "cat": 
+        case "catsniper": 
             var mooma = new Discord.RichEmbed()
                 .setDescription("CatSniper is a fag");
             message.channel.sendEmbed(mooma);
@@ -129,7 +130,8 @@ bot.on("message", async function(message) {
         if (!modlog) return message.reply("There is no `mod-log` channel in this guild...")
         kickMember.kick().then(member => message.reply(`**${member.user.username}** was kicked...`))
             var kembed = new Discord.RichEmbed()
-              .setTitle("**KICK**")
+              .setColor(0xFF4646)
+              .setTitle("**Action**", "Kick")
               .addField("**Kicked member:**", `${kickMember.username}`)
               .addField("**Kicked member ID:**", `${kickMember.id}`)
               .addField("**Moderator:**", `${message.author.username}`)
@@ -161,6 +163,7 @@ bot.on("message", async function(message) {
                       .then(m => m.delete(2000));
             if (!modlog) return message.reply("there's no `mod-log` channel in this server.")
                       .then(m => m.delete(2000));
+            sql.run(`INSERT INTO warns (userusername, reason, messageauthorusername) VALUES (?, ?, ?)`, [user.username, reason, message.author.username]);
             message.channel.sendMessage(`${user.username} was warned.`)
             .then(m => m.delete(2000));
             var warn = new Discord.RichEmbed()
@@ -284,31 +287,6 @@ bot.on("message", async function(message) {
             if (!log) return message.channel.send("You need to make a text channel called **mod-log** for this command to fully work!");
             message.guild.channels.get(log.id).send(EMdel);
             break;
-        case "d":
-             var mms = message.mentions.members.first();
-            const filterby = mms ? mms.id : bot.user.id;
-            if (!message.member.hasPermission("MANAGE_MESSAGES")) return
-            if (!message.guild.member(bot.user).hasPermission("MANAGE_MESSAGES")) return message.reply("i dont have enough perms for this...")
-            if (!args[1]) return message.reply(' you must specify an amount to delete!');
-            if (!args[1] && !mms) return message.reply('Must specify a user and amount, or just an amount, of messages to purge!');
-            message.channel.fetchMessages({
-            limit: args[1],
-            }).then((messages) => {
-            if (mms) {
-            messages = messages.filter(m => m.author.id === filterby).array().slice(0, args);
-            }
-            message.channel.bulkDelete(messages).catch(error => console.log(error.stack));
-            })
-            var EMdele = new Discord.RichEmbed()
-            .setAuthor(message.author.username+ " #" + message.author.discriminator, message.author.avatarURL)
-            .setColor(0xB70600)
-            .setTimestamp()
-            .setFooter("Delete")
-            .setTitle("Deleted " + args[1] + " messages in " + message.channel.name + ".")
-            var glog = message.guild.channels.find("name", "mod-log");
-            if (!glog) return message.channel.send("You need to make a text channel called **mod-log** for this command to fully work!");
-            message.guild.channels.get(glog.id).send(EMdele);
-            break;
         case "crole":
             let actrole = args.slice(1).join(' ')
             if (!message.member.hasPermission("MANAGE_ROLES")) return
@@ -322,7 +300,7 @@ bot.on("message", async function(message) {
         return message.reply("You dont have permissions to use this command.").catch(console.error);
       if(message.mentions.users.size === 0) 
         return message.reply("Please mention a user to ban").catch(console.error);
-      let banMember = message.guild.member(message.mentions.users.first());
+      let banMember = message.mentions.users.first();
       if(!banMember) 
         return message.reply("That user does not seem valid");
       let reasonxxx = args.slice(2).join(' ')
@@ -333,7 +311,9 @@ bot.on("message", async function(message) {
       if (!modlog) return message.reply("There is no `mod-log` channel in this guild...")
       banMember.ban().then(member => message.reply(`**${member.user.username}** was banned...`))
           var kembed = new Discord.RichEmbed()
-            .setTitle("**BAN**")
+            .setColor(0xFF0000)
+            .setTitle("**Action**", "Ban")
+            .setThumbnail(banMember.avatarURL)
             .addField("**Banned member:**", `${banMember.user.username}`)
             .addField("**Banned member ID:**", `${banMember.id}`)
             .addField("**Moderator:**", `${message.author.username}`)
@@ -343,7 +323,6 @@ bot.on("message", async function(message) {
         default:
     }
 });
-
 bot.login(process.env.BOT_TOKEN);
 
 
