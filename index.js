@@ -284,6 +284,31 @@ bot.on("message", async function(message) {
             if (!log) return message.channel.send("You need to make a text channel called **mod-log** for this command to fully work!");
             message.guild.channels.get(log.id).send(EMdel);
             break;
+        case "d":
+             var mms = message.mentions.members.first();
+            const filterby = mms ? mms.id : bot.user.id;
+            if (!message.member.hasPermission("MANAGE_MESSAGES")) return
+            if (!message.guild.member(bot.user).hasPermission("MANAGE_MESSAGES")) return message.reply("i dont have enough perms for this...")
+            if (!args[1]) return message.reply(' you must specify an amount to delete!');
+            if (!args[1] && !mms) return message.reply('Must specify a user and amount, or just an amount, of messages to purge!');
+            message.channel.fetchMessages({
+            limit: args[1],
+            }).then((messages) => {
+            if (mms) {
+            messages = messages.filter(m => m.author.id === filterby).array().slice(0, args);
+            }
+            message.channel.bulkDelete(messages).catch(error => console.log(error.stack));
+            })
+            var EMdele = new Discord.RichEmbed()
+            .setAuthor(message.author.username+ " #" + message.author.discriminator, message.author.avatarURL)
+            .setColor(0xB70600)
+            .setTimestamp()
+            .setFooter("Delete")
+            .setTitle("Deleted " + args[1] + " messages in " + message.channel.name + ".")
+            var glog = message.guild.channels.find("name", "mod-log");
+            if (!glog) return message.channel.send("You need to make a text channel called **mod-log** for this command to fully work!");
+            message.guild.channels.get(glog.id).send(EMdele);
+            break;
         case "crole":
             let actrole = args.slice(1).join(' ')
             if (!message.member.hasPermission("MANAGE_ROLES")) return
