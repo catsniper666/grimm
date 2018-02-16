@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const PREFIX = "::"
+const PREFIX = "//"
 const sql = require("sqlite");
 sql.open("./warns");
 
@@ -22,12 +22,12 @@ var fortunes2 = [
 var bot = new Discord.Client();
 
 bot.on("ready", function() {
-    bot.user.setGame("::justice::")
+    bot.user.setGame("//help for mods")
     console.log("Ready")
 });
 
 bot.on("guildMemberAdd", function(member) {
-    member.guild.channels.find("name", "welcome").sendMessage(member.toString() + " Welcome to Ａｅｓｔｈｅｔｉｃ けマ! Be sure to read #info-rules first. Enjoy your stay!")
+    member.guild.channels.find("name", "welcome").sendMessage(member.toString() + "Welcome to Ａｅｓｔｈｅｔｉｃ けマ! Be sure to read #info-rules first. Enjoy your stay!")
 
     member.addRole(member.guild.roles.find("name", "Ｇｕｅｓｔ　煙ャカ"))
 });
@@ -60,7 +60,7 @@ bot.on("message", async function(message) {
             if (!member) return message.reply("can't read that shet");
             let muteRole = message.guild.roles.find("name", "Muted");
             if (!muteRole) return message.reply("no role sry")
-            let time = args[1];
+            let time = args[2];
             if(!time) return message.reply("no time sry");
         
             member.addRole(muteRole.id);
@@ -69,6 +69,12 @@ bot.on("message", async function(message) {
             setTimeout(function() {
                 member.removeRole(muteRole.id);
             }, time*60000);
+            var mutebed = new Discord.RichEmbed()
+            .setColor(0x00AE86)
+            .setTitle("**MUTE**")
+            .addField("**Muted member:**", `${member.user.username}`)
+            .addField("**Muted for:**", `${time} minutes.`)
+            message.guild.channels.get(modlog.id).sendEmbed(mutebed)
             break;
         case "unmute":
             let mutedone = message.mentions.members.first();
@@ -81,7 +87,18 @@ bot.on("message", async function(message) {
             var mooma = new Discord.RichEmbed()
                 .setDescription("CatSniper is a fag");
             message.channel.sendEmbed(mooma);
-            break;    
+            break;  
+        case "say":
+            if (message.author.id !== "244461194545594369") return message.reply("that command can only be used by catsniper")
+            .then(m => m.delete(2000));
+            let laluca = args.slice(1).join(' ')
+            if (!laluca) return 
+            message.delete().catch(O_o=>{});
+            message.channel.sendMessage(`${laluca}`)
+            break;
+        case "sayeste":
+            let bubuca = args.slice(1).join(' ')
+
         case "hmmm":
             if (args[1]) message.channel.sendMessage(fortunes[Math.floor(Math.random() * fortunes.length)]);
             else message.channel.sendMessage("can't read that shet");
@@ -136,11 +153,11 @@ bot.on("message", async function(message) {
            .addField(`**warncount**`, `- displays how many warns someone has [usage]: *::warncount <mentioned.user>*`)
            .addField(`**delwarns**`, `- deletes all of someone's warns [usage]: *::delwarns <mentioned.user>*`)
            .setFooter(`Requested by: ${message.author.username}`)
+           if (!message.member.permissions.has("MANAGE_MESSAGES")) return
             message.channel.sendEmbed(hembed)
             break;
         case "warn":
-            if (!message.member.hasPermission("MANAGE_ROLES")) return message.reply("you dont have enough perms to use this command.")
-                      .then(m => m.delete(2000));
+            if (!message.member.hasPermission("MANAGE_ROLES")) return
             if (!user) return message.reply("please mention someone to warn them")
                       .then(m => m.delete(2000));
             if (!reason) return message.reply("please provide a reason for the warning")
@@ -159,8 +176,7 @@ bot.on("message", async function(message) {
             return message.guild.channels.get(modlog.id).send(warn);
             break;
         case "warncount":
-        if (!message.member.hasPermission("MANAGE_ROLES")) return message.reply("you dont have enough perms to use this command.")
-        .then(m => m.delete(2000));
+        if (!message.member.hasPermission("MANAGE_ROLES")) return 
          if (!user) return message.reply("please mention someone to display their warns")
         .then(m => m.delete(2000));
             let info =  await sql.all(`SELECT * FROM warns WHERE userusername = "${user.username}"`);
@@ -173,8 +189,7 @@ bot.on("message", async function(message) {
             message.channel.send(embedd)
             break;
         case "delwarns":
-        if (!message.member.hasPermission("MANAGE_ROLES")) return message.reply("you dont have enough perms to use this command.")
-        .then(m => m.delete(2000));
+        if (!message.member.hasPermission("MANAGE_ROLES")) return 
         if (!user) return message.reply("please mention someone to delet their warns")
         .then(m => m.delete(2000));
         if (!modlog) return message.reply("there's no `mod-log` channel in this server.")
@@ -188,6 +203,7 @@ bot.on("message", async function(message) {
                 .addField('User:', `${user.username}`)
                 .addField('Moderator:', `${message.author.username}`)
             return message.guild.channels.get(modlog.id).send(mata);
+            break;
         case "purge":
             let messagecount = parseInt(args[1]) || 1;
 
@@ -207,9 +223,11 @@ bot.on("message", async function(message) {
            }).catch(console.error);
             break;
         case "prune":
-            if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply("You dont have enough perms for this command...")
+            if (!message.member.hasPermission("MANAGE_MESSAGES")) return 
             const params = message.content.split(' ')
             let number = parseInt(params[1]);
+            if (!number) return message.reply("please select a number of messages")
+                                    .then(m => m.delete(2000));
             message.channel.fetchMessages({limit: number}).then(messages => message.channel.bulkDelete(messages));
             message.channel.sendMessage(`:white_check_mark: Pruned \`${number}\` messages.`)
                 .then(m => m.delete(2000));
@@ -224,8 +242,7 @@ bot.on("message", async function(message) {
             let setroleto = message.guild.member(message.mentions.users.first());
             var role = args.slice(2).join(" "); 
             let role2 = message.guild.roles.find("name", `${role}`)
-            if (!message.member.hasPermission("MANAGE_ROLES")) return message.reply("you dont have enough perms to use this command.")
-            .then(m => m.delete(2000));
+            if (!message.member.hasPermission("MANAGE_ROLES")) return 
             if (!message.guild.member(bot.user).hasPermission("MANAGE_ROLES")) return message.reply("I dont have enough perms to use this command.")
             .then(m => m.delete(2000));
             if(!setroleto) return ("mention someone to give them a role.")
@@ -240,8 +257,7 @@ bot.on("message", async function(message) {
             let gaga = message.guild.member(message.mentions.users.first());
             var pupu = args.slice(2).join(" "); 
             let rolez = message.guild.roles.find("name", `${pupu}`)
-            if (!message.member.hasPermission("MANAGE_ROLES")) return message.reply("you dont have enough perms to use this command.")
-            .then(m => m.delete(2000));
+            if (!message.member.hasPermission("MANAGE_ROLES")) return 
             if (!message.guild.member(bot.user).hasPermission("MANAGE_ROLES")) return message.reply("I dont have enough perms to use this command.")
             .then(m => m.delete(2000));
             if(!gaga) return ("mention someone to give them a role.")
@@ -256,8 +272,7 @@ bot.on("message", async function(message) {
             let mama = message.guild.member(message.mentions.users.first());
             var tata = args.slice(2).join(" "); 
             let sora = message.guild.roles.find("name", `${tata}`)
-            if (!message.member.hasPermission("MANAGE_ROLES")) return message.reply("you dont have enough perms to use this command.")
-            .then(m => m.delete(2000));
+            if (!message.member.hasPermission("MANAGE_ROLES")) return 
             if (!message.guild.member(bot.user).hasPermission("MANAGE_ROLES")) return message.reply("I dont have enough perms to use this command.")
             .then(m => m.delete(2000));
             if(!mama) return message.reply("mention someone to remove a role from them.")
@@ -269,8 +284,7 @@ bot.on("message", async function(message) {
         let gugu = message.guild.member(message.mentions.users.first());
         var tarcu = args.slice(2).join(" "); 
         let retezat = message.guild.roles.find("name", `${tarcu}`)
-        if (!message.member.hasPermission("MANAGE_ROLES")) return message.reply("you dont have enough perms to use this command.")
-        .then(m => m.delete(2000));
+        if (!message.member.hasPermission("MANAGE_ROLES")) return 
         if (!message.guild.member(bot.user).hasPermission("MANAGE_ROLES")) return message.reply("I dont have enough perms to use this command.")
         .then(m => m.delete(2000));
         if(!gugu) return message.reply("mention someone to remove a role from them.")
@@ -281,8 +295,9 @@ bot.on("message", async function(message) {
         case "delete":
             var mm = message.mentions.members.first();
             const filterBy = mm ? mm.id : bot.user.id;
-            if (!args[1]) return message.reply(' must specify an amount to delete!');
             if (!message.member.hasPermission("MANAGE_MESSAGES")) return
+            if (!message.guild.member(bot.user).hasPermission("MANAGE_MESSAGES")) return message.reply("i dont have enough perms for this...")
+            if (!args[1]) return message.reply(' you must specify an amount to delete!');
             if (!args[1] && !mm) return message.reply('Must specify a user and amount, or just an amount, of messages to purge!');
             message.channel.fetchMessages({
             limit: args[1],
@@ -302,17 +317,25 @@ bot.on("message", async function(message) {
             if (!log) return message.channel.send("You need to make a text channel called **mod-log** for this command to fully work!");
             message.guild.channels.get(log.id).send(EMdel);
             break;
+        case "crole":
+            let actrole = args.slice(1).join(' ')
+            if (!message.member.hasPermission("MANAGE_ROLES")) return
+            if (!message.guild.member(bot.user).hasPermission("MANAGE_ROLES")) return message.reply("i dont have perms for that") 
+            .then(m => m.delete(2000));
+            if (!actrole) return 
+            message.guild.createRole(actrole)
+            break;
         case "ban":
         if(!message.member.hasPermission("BAN_MEMBERS"))
         return message.reply("You dont have permissions to use this command.").catch(console.error);
-      let reasonxxx = args.slice(2).join(' ')
-      if(!reasonxxx) 
-        return message.reply("You must provide a reason for the ban")
       if(message.mentions.users.size === 0) 
-        return message.reply("Please mention a user to kick").catch(console.error);
+        return message.reply("Please mention a user to ban").catch(console.error);
       let banMember = message.guild.member(message.mentions.users.first());
       if(!banMember) 
         return message.reply("That user does not seem valid");
+      let reasonxxx = args.slice(2).join(' ')
+        if(!reasonxxx) 
+          return message.reply("You must provide a reason for the ban")
       if(!message.guild.member(bot.user).hasPermission("BAN_MEMBERS")) 
         return message.reply("I don't have the permissions (BAN_MEMBER) to do this.").catch(console.error);
       if (!modlog) return message.reply("There is no `mod-log` channel in this guild...")
@@ -326,10 +349,7 @@ bot.on("message", async function(message) {
       return message.guild.channels.get(modlog.id).sendEmbed(kembed)
            break;
         default:
-
     }
-    
-
 });
 
 bot.login(process.env.BOT_TOKEN);
