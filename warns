@@ -1,5 +1,1 @@
-CREATE TABLE `warns` (
-	`userusername`	TEXT,
-	`reason`	TEXT,
-	`messageauthorusername`	TEXT
-);
+
