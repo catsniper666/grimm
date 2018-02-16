@@ -1,7 +1,8 @@
 const Discord = require("discord.js");
 const PREFIX = "//"
 
-var fortunes = [
+
+bot.var fortunes = [
     "ew",
     " like shet",
     " sexy boi",
@@ -53,7 +54,7 @@ bot.on("message", async function(message) {
             message.channel.sendMessage("**I'm a super clever bot made by my lord CatSniper**");
             break;
         case "mute":
-            let member = message.mentions.users.first();
+            let member = message.mentions.members.first()
             if (!member) return message.reply("can't read that shet");
             let muteRole = message.guild.roles.find("name", "Muted");
             if (!muteRole) return message.reply("no role sry")
@@ -94,9 +95,6 @@ bot.on("message", async function(message) {
             message.delete().catch(O_o=>{});
             message.channel.sendMessage(`${laluca}`)
             break;
-        case "sayeste":
-            let bubuca = args.slice(1).join(' ')
-
         case "hmmm":
             if (args[1]) message.channel.sendMessage(fortunes[Math.floor(Math.random() * fortunes.length)]);
             else message.channel.sendMessage("can't read that shet");
@@ -163,17 +161,17 @@ bot.on("message", async function(message) {
                       .then(m => m.delete(2000));
             if (!modlog) return message.reply("there's no `mod-log` channel in this server.")
                       .then(m => m.delete(2000));
-            sql.run(`INSERT INTO warns (userusername, reason, messageauthorusername) VALUES (?, ?, ?)`, [user.username, reason, message.author.username]);
             message.channel.sendMessage(`${user.username} was warned.`)
             .then(m => m.delete(2000));
             var warn = new Discord.RichEmbed()
             .setColor(0x00AE86)
+            .setThumbnail(user.avatarURL)
             .addField('Action:', 'Warning:')
             .addField('User:', `${user.username}`)
             .addField('Moderator:', `${message.author.username}`)
             .addField("With reason:", `${reason}`)
             return message.guild.channels.get(modlog.id).send(warn);
-            break;
+            break;  
         case "purge":
             let messagecount = parseInt(args[1]) || 1;
 
@@ -322,7 +320,6 @@ bot.on("message", async function(message) {
            break;
         default:
     }
-});
-bot.login(process.env.BOT_TOKEN);
+});login(process.env.BOT_TOKEN);
 
 
