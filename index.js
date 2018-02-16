@@ -1,14 +1,6 @@
 const Discord = require("discord.js");
 const PREFIX = "//"
 
-
-bot.var fortunes = [
-    "ew",
-    " like shet",
-    " sexy boi",
-    "cum on me hot boi"
-];
-
 var fortunes2 = [
     "1 inch dick",
     "60 inches dayum huge peen",
@@ -171,7 +163,7 @@ bot.on("message", async function(message) {
             .addField('Moderator:', `${message.author.username}`)
             .addField("With reason:", `${reason}`)
             return message.guild.channels.get(modlog.id).send(warn);
-            break;  
+            break;
         case "purge":
             let messagecount = parseInt(args[1]) || 1;
 
@@ -320,6 +312,9 @@ bot.on("message", async function(message) {
            break;
         default:
     }
-});login(process.env.BOT_TOKEN);
+});
+
+
+bot.login(process.env.BOT_TOKEN);
 
 
