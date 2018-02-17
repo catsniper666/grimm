@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const PREFIX = "//"
 const sql = require("sqlite")
-sql.open("./warns/database.sqlite")
+sql.open("./warns")
 
 var fortunes2 = [
     "1 inch dick",
@@ -198,7 +198,6 @@ bot.on("message", async function(message) {
             return message.guild.channels.get(modlog.id).send(mata);
             break;
         case "purge":
-        case "purge":
             let messagecount = parseInt(args[1]) || 1;
 
             var deletedMessages = -1;
@@ -344,6 +343,29 @@ bot.on("message", async function(message) {
             .addField("**Reason:**", `${reasonxxx}`)
       return message.guild.channels.get(modlog.id).sendEmbed(kembed)
            break;
+         case 'p':
+        if (!message.member.hasPermission("MANAGE_MESSAGES")) return
+        if (!message.guild.member(bot.user).hasPermission("MANAGE_MESSAGES")) return message.reply("i dont have enough perms for this...")
+        if (!args[1]) return message.reply(' you must specify an amount to delete!');
+        if (!args[1] && !mm) return message.reply('Must specify a user and amount, or just an amount, of messages to purge!');
+        message.channel.fetchMessages({
+        limit: args[1],
+        }).then((messages) => {
+        if (mm) {
+        messages = messages.filter(m => m.author.id === filterBy).array().slice(0, args);
+        }
+        message.channel.bulkDelete(messages).catch(error => console.log(error.stack));
+        })
+        var EMdele = new Discord.RichEmbed()
+        .setAuthor(message.author.username+ " #" + message.author.discriminator, message.author.avatarURL)
+        .setColor(0xB70600)
+        .setTimestamp()
+        .setFooter("Delete")
+        .setTitle("Deleted " + args[1] + " messages in " + message.channel.name + ".")
+        var logy = message.guild.channels.find("name", "mod-log");
+        if (!logy) return message.channel.send("You need to make a text channel called **mod-log** for this command to fully work!");
+        message.guild.channels.get(logy.id).send(EMdele);
+        break;
         default:
     }
 });
