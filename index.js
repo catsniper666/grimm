@@ -1,7 +1,6 @@
 const Discord = require("discord.js");
 const PREFIX = "//"
-const sql = require("sqlite")
-sql.open("./warns")
+
 
 var fortunes2 = [
     "1 inch dick",
@@ -155,7 +154,6 @@ bot.on("message", async function(message) {
                       .then(m => m.delete(2000));
             if (!modlog) return message.reply("there's no `mod-log` channel in this server.")
                       .then(m => m.delete(2000));
-            sql.run(`INSERT INTO warns (userusername, reason, messageauthorusername) VALUES (?, ?, ?)`, [user.username, reason, message.author.username]);
             message.channel.sendMessage(`${user.username} was warned.`)
             .then(m => m.delete(2000));
             var warn = new Discord.RichEmbed()
@@ -166,36 +164,6 @@ bot.on("message", async function(message) {
             .addField('Moderator:', `${message.author.username}`)
             .addField("With reason:", `${reason}`)
             return message.guild.channels.get(modlog.id).send(warn);
-            break;
-        case "warncount":
-        if (!message.member.hasPermission("MANAGE_ROLES")) return 
-         if (!user) return message.reply("please mention someone to display their warns")
-        .then(m => m.delete(2000));
-            let info =  await sql.all(`SELECT * FROM warns WHERE userusername = "${user.username}"`);
-            let warncount = 0
-            for(warncount = 0; warncount < info.length; warncount ++) {}
-            var embedd = new Discord.RichEmbed()
-            .setColor("#e00808")
-            .setDescription(user.username + " has " + warncount + " warnings.")
-            console.log(warncount)
-            message.channel.send(embedd)
-            break;
-        case "delwarns":
-        if (!message.member.hasPermission("MANAGE_ROLES")) return 
-        if (!user) return message.reply("please mention someone to delet their warns")
-        .then(m => m.delete(2000));
-        if (!modlog) return message.reply("there's no `mod-log` channel in this server.")
-        .then(m => m.delete(2000));
-        sql.run(`DELETE FROM warns WHERE userusername = "${user.username}"`);
-            message.channel.sendMessage(`Deleted ${user.username}'s warnings.`)
-                .then(m => m.delete(2000));
-            var mata = new Discord.RichEmbed()
-                .setColor(0x00AE86)
-                .setThumbnail(user.avatarURL)
-                .addField('Action:', 'Deleted warnings:')
-                .addField('User:', `${user.username}`)
-                .addField('Moderator:', `${message.author.username}`)
-            return message.guild.channels.get(modlog.id).send(mata);
             break;
         case "purge":
             let messagecount = parseInt(args[1]) || 1;
