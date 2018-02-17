@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const PREFIX = "//"
 const sql = require("sqlite")
-sql.open("./warns")
+sql.open("./warns/database.sqlite")
 
 var fortunes2 = [
     "1 inch dick",
