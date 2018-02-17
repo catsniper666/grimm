@@ -19,7 +19,7 @@ bot.on("ready", function() {
 bot.on("guildMemberAdd", function(member) {
     member.guild.channels.find("name", "welcome").sendMessage(member.toString() + "Welcome to Ａｅｓｔｈｅｔｉｃ けマ! Be sure to read #info-rules first. Enjoy your stay!")
 
-    member.addRole(member.guild.roles.find("name", "Ｇｕｅｓｔ　煙ャカ"))
+    member.addRole(member.guild.roles.find("name", "Ｇｕｅｓｔ　ゲスト"))
 });
 
 
