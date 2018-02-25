@@ -245,6 +245,9 @@ bot.on("message", async function(message) {
     if (!message.member.hasPermission("MANAGE_ROLES")) return 
      if (!user) return message.reply("please mention someone to display their warns")
     .then(m => m.delete(2000));
+        sql.run("CREATE TABLE IF NOT EXISTS warns (userusername TEXT, reason INTEGER, messageauthorusername)").then(() => {
+                    sql.run(`INSERT INTO warns (userusername, reason, messageauthorusername) VALUES (?, ?, ?)`, [user.username, reason, message.author.username]);
+                })
         let info =  await sql.all(`SELECT * FROM warns WHERE userusername = "${user.username}"`);
         let warncount = 0
         for(warncount = 0; warncount < info.length; warncount ++) {}
@@ -270,6 +273,9 @@ bot.on("message", async function(message) {
     .then(m => m.delete(2000));
     if (!modlog) return message.reply("there's no `mod-log` channel in this server.")
     .then(m => m.delete(2000));
+    sql.run("CREATE TABLE IF NOT EXISTS warns (userusername TEXT, reason INTEGER, messageauthorusername)").then(() => {
+                    sql.run(`INSERT INTO warns (userusername, reason, messageauthorusername) VALUES (?, ?, ?)`, [user.username, reason, message.author.username]);
+                })
     sql.run(`DELETE FROM warns WHERE userusername = "${user.username}"`);
         message.channel.sendMessage(`Deleted ${user.username}'s warnings.`)
             .then(m => m.delete(2000));
